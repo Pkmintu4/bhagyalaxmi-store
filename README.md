@@ -62,7 +62,41 @@ This project is built with:
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/01952010-5841-45ed-804a-ca2d9ee08455) and click on Share -> Publish.
+### Deploy to Render.com (Recommended)
+
+This project is configured for deployment as a single web service on Render.com:
+
+1. **Push to GitHub:**
+   ```sh
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin <your-github-repo-url>
+   git push -u origin main
+   ```
+
+2. **Deploy on Render:**
+   - Go to [Render.com](https://render.com) and sign up/login
+   - Click "New" → "Web Service"
+   - Connect your GitHub repository
+   - Render will automatically detect the `render.yaml` configuration
+   - Set these environment variables in Render dashboard:
+     - `DATABASE_URL`: Your PostgreSQL database URL
+     - `JWT_SECRET`: A secure random string
+     - `GOOGLE_CLIENT_ID`: Your Google OAuth client ID (optional)
+   - Click "Deploy"
+
+3. **Environment Variables Required:**
+   - `DATABASE_URL`: PostgreSQL connection string
+   - `JWT_SECRET`: Secret key for JWT tokens
+   - `GOOGLE_CLIENT_ID`: For Google OAuth (optional)
+   - `NODE_ENV`: Set to "production" (auto-set by Render)
+   - `PORT`: Set to 10000 (auto-set by Render)
+
+### Alternative: Lovable Deployment
+
+Simply open [Lovable](https://lovable.dev/projects/01952010-5841-45ed-804a-ca2d9ee08455) and click on Share → Publish.
 
 ## Can I connect a custom domain to my Lovable project?
 

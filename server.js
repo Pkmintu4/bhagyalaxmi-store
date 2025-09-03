@@ -66,7 +66,8 @@ const defaultAllowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'http://localhost:8080',
-  'http://localhost:8081'
+  'http://localhost:8081',
+  'https://bhagyalaxmi-store.onrender.com'
 ];
 const envAllowedOrigins = (process.env.ALLOWED_ORIGINS || '')
   .split(',')
@@ -109,8 +110,8 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Root endpoint
-app.get('/', (req, res) => {
+// Root endpoint moved to /api/info to avoid conflicts with frontend
+app.get('/api/info', (req, res) => {
   res.json({ 
     message: 'Shop API Server', 
     version: '1.0.0',
@@ -1065,11 +1066,37 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const clientDir = path.join(__dirname, 'dist');
 
+console.log('🔍 Checking for frontend build...');
+console.log('Client directory path:', clientDir);
+console.log('Client directory exists:', fs.existsSync(clientDir));
+
 if (fs.existsSync(clientDir)) {
+  console.log('✅ Serving frontend from:', clientDir);
   app.use(express.static(clientDir));
+  
+  // Handle React Router - serve index.html for all non-API routes
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api')) return next();
+    console.log('📄 Serving index.html for route:', req.path);
     res.sendFile(path.join(clientDir, 'index.html'));
+  });
+} else {
+  console.log('⚠️ Frontend build not found. Run "npm run build" to create it.');
+  
+  // Fallback: serve a simple message if no build exists
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.json({ 
+      message: 'Frontend build not found. Please run "npm run build" and redeploy.',
+      buildPath: clientDir,
+      availableEndpoints: {
+        health: '/api/health',
+        auth: '/api/auth',
+        products: '/api/products',
+        categories: '/api/categories',
+        cart: '/api/cart'
+      }
+    });
   });
 }
 

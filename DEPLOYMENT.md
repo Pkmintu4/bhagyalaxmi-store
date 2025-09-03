@@ -1,34 +1,76 @@
-# Deployment Guide
+# Deployment Guide for Single Web Service on Render.com
 
-## Backend Deployment (Render)
+## Overview
+This project is configured to deploy as a **single web service** on Render.com, serving both the React frontend and Express backend from one service.
 
-### 1. Push to GitHub
+## Step 1: Push to GitHub
 ```bash
+# Navigate to your project directory
+cd shop-project-main
+
+# Initialize git repository
+git init
+
+# Add all files
+git add .
+
+# Commit changes
+git commit -m "Initial commit for Render deployment"
+
+# Add your GitHub repository as remote
+git branch -M main
 git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-git push -u origin deploy
+
+# Push to GitHub
+git push -u origin main
 ```
 
-### 2. Deploy on Render
+## Step 2: Deploy on Render
 1. Go to [render.com](https://render.com) and sign up/login
 2. Click "New" → "Web Service"
 3. Connect your GitHub repository
-4. Configure:
-   - **Name**: `shop-api` (or your preferred name)
-   - **Root Directory**: `shop-project-main` (if repo is at root, leave blank)
-   - **Runtime**: `Node`
-   - **Build Command**: `npm ci`
-   - **Start Command**: `node server.js`
-   - **Plan**: Free (or paid if needed)
+4. **Render will automatically detect the `render.yaml` configuration**
+5. The service will be configured as:
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm run server`
+   - **Plan**: Free
 
-### 3. Environment Variables
-Add these in Render dashboard:
-```
-DATABASE_URL=mongodb+srv://username:password@cluster.mongodb.net/shop-project
-JWT_SECRET=your-super-secret-jwt-key-here
-NODE_ENV=production
-ALLOWED_ORIGINS=https://your-frontend-domain.com,https://another-domain.com
-GOOGLE_CLIENT_ID=your-google-client-id (optional)
-```
+## Step 3: Environment Variables
+Add these in Render dashboard (Environment section):
+
+**Required:**
+- `DATABASE_URL`: PostgreSQL connection string (create a PostgreSQL database on Render first)
+- `JWT_SECRET`: A secure random string (e.g., `openssl rand -base64 32`)
+
+**Optional:**
+- `GOOGLE_CLIENT_ID`: Your Google OAuth client ID for Google login
+
+**Auto-configured by render.yaml:**
+- `NODE_ENV`: production
+- `PORT`: 10000
+- `ALLOWED_ORIGINS`: Will be set to your Render app URL
+
+## Step 4: Database Setup
+1. In Render dashboard, create a new PostgreSQL database
+2. Copy the "External Database URL" 
+3. Set it as `DATABASE_URL` environment variable in your web service
+4. The database will be automatically initialized when the app starts
+
+## Step 5: Deploy
+Click "Create Web Service" and wait for deployment. Your app will be available at `https://bhagyalaxmi-store.onrender.com`
+
+## Updating Existing Deployment
+Since you already have a deployment at `https://bhagyalaxmi-store.onrender.com`, you can update it by:
+
+1. **Push changes to GitHub** (see commands below)
+2. **Render will auto-deploy** from your connected repository
+3. **Monitor the deployment** in Render dashboard
+
+## How It Works
+- **Build Phase**: Installs dependencies and builds the React frontend to `dist/`
+- **Runtime**: Express server serves the built React app and API endpoints
+- **Single Service**: Frontend and backend run together, no separate deployments needed
+- **File Uploads**: Persistent disk storage for uploaded images
 
 ### 4. Deploy
 Click "Create Web Service" and wait for deployment.
