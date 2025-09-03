@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
 import multer from 'multer';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import fs from 'fs';
 
 // Load environment variables
@@ -1058,6 +1059,19 @@ app.post('/api/discounts', authenticateToken, requireAdmin, async (req, res) => 
     res.status(500).json({ error: 'Failed to create discount' });
   }
 });
+
+// Serve frontend build (SPA) - after API routes
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const clientDir = path.join(__dirname, 'dist');
+
+if (fs.existsSync(clientDir)) {
+  app.use(express.static(clientDir));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(clientDir, 'index.html'));
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
