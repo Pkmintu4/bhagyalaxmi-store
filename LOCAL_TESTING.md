@@ -14,7 +14,7 @@
 
 2. **Update `.env` with your values**:
    ```
-   DATABASE_URL=mongodb+srv://username:password@cluster.mongodb.net/bhagyalaxmi-store
+   DATABASE_URL=mongodb+srv://<YOUR_USERNAME>:<YOUR_PASSWORD>@<YOUR_CLUSTER>.mongodb.net/<YOUR_DB_NAME>?retryWrites=true&w=majority
    JWT_SECRET=your-local-jwt-secret-here
    GOOGLE_CLIENT_ID=your-google-client-id
    NODE_ENV=development

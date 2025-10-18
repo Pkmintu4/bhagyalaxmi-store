@@ -54,7 +54,7 @@ Add these in Render dashboard (Environment section):
 1. Use your existing MongoDB Atlas connection string
 2. Set `DATABASE_URL` environment variable in Render dashboard:
    ```
-   DATABASE_URL=mongodb+srv://username:password@cluster.mongodb.net/bhagyalaxmi-store
+      DATABASE_URL=mongodb+srv://<YOUR_USERNAME>:<YOUR_PASSWORD>@<YOUR_CLUSTER>.mongodb.net/<YOUR_DB_NAME>?retryWrites=true&w=majority
    ```
 3. The database will be automatically initialized when the app starts
 
