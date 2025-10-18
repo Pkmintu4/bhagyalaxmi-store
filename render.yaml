@@ -3,7 +3,7 @@ services:
     name: bhagyalaxmi-store
     env: node
     plan: free
-    buildCommand: npm install && npm run build && ls -la dist/
+    buildCommand: npm ci && npm run build
     startCommand: npm run server
     envVars:
       - key: NODE_ENV

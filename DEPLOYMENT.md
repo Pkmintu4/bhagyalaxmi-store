@@ -50,11 +50,13 @@ Add these in Render dashboard (Environment section):
 - `PORT`: 10000
 - `ALLOWED_ORIGINS`: Will be set to your Render app URL
 
-## Step 4: Database Setup
-1. In Render dashboard, create a new PostgreSQL database
-2. Copy the "External Database URL" 
-3. Set it as `DATABASE_URL` environment variable in your web service
-4. The database will be automatically initialized when the app starts
+## Step 4: Database Setup (MongoDB)
+1. Use your existing MongoDB Atlas connection string
+2. Set `DATABASE_URL` environment variable in Render dashboard:
+   ```
+   DATABASE_URL=mongodb+srv://username:password@cluster.mongodb.net/bhagyalaxmi-store
+   ```
+3. The database will be automatically initialized when the app starts
 
 ## Step 5: Deploy
 Click "Create Web Service" and wait for deployment. Your app will be available at `https://bhagyalaxmi-store.onrender.com`

@@ -1,36 +1,46 @@
-// Set environment variable before importing anything
-process.env.DATABASE_URL = "mongodb+srv://thalladapraneeth:Pr%40neeth4@bhagyalaxmistore.3bi7qiy.mongodb.net/shop-project?retryWrites=true&w=majority&appName=BhagyaLaxmiStore";
-
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 
-// Load environment variables
 dotenv.config();
 
 const prisma = new PrismaClient();
 
-async function testConnection() {
+console.log('🔍 Testing database connection...\n');
+
+async function testDatabase() {
   try {
-    console.log('🔍 Testing MongoDB connection...');
-    console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Set' : 'Not set');
-    
-    // Test the connection
+    // Test connection
+    console.log('📡 Testing database connection...');
     await prisma.$connect();
-    console.log('✅ Successfully connected to MongoDB!');
+    console.log('✅ Database connected successfully!');
     
-    // Try to fetch categories
+    // Test categories
+    console.log('\n📂 Testing categories...');
     const categories = await prisma.category.findMany();
-    console.log('✅ Categories fetched:', categories.length);
+    console.log(`✅ Found ${categories.length} categories:`, categories.map(c => c.name));
     
-    // Try to fetch products
+    // Test products
+    console.log('\n📦 Testing products...');
     const products = await prisma.product.findMany();
-    console.log('✅ Products fetched:', products.length);
+    console.log(`✅ Found ${products.length} products:`, products.map(p => p.title));
     
-    await prisma.$disconnect();
-    console.log('✅ Database connection test completed successfully!');
+    // Test users
+    console.log('\n👤 Testing users...');
+    const users = await prisma.user.findMany();
+    console.log(`✅ Found ${users.length} users:`, users.map(u => u.email));
+    
+    console.log('\n🎉 Database is working perfectly!');
+    console.log('📊 Summary:');
+    console.log(`   - Categories: ${categories.length}`);
+    console.log(`   - Products: ${products.length}`);
+    console.log(`   - Users: ${users.length}`);
+    
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
+    console.error('❌ Database error:', error.message);
+    console.error('Full error:', error);
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
-testConnection(); 
+testDatabase();
